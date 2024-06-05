@@ -1,6 +1,6 @@
 import pandas as pd
 
-file_path1 = r"C:\Users\Joshua\Senior Thesis\Programs\Senior-Thesis-real\ratings.csv"
+file_path1 = r"C:\Users\Joshua\Senior Thesis\Programs\Senior-Thesis-real\ratings_small.csv"
 
 
 rating_df = pd.read_csv(file_path1)
@@ -22,8 +22,6 @@ mean_adjusted_rating = rating_df['rating_adjusted'].mean()
 rating_df['rating_adjusted'] -= mean_adjusted_rating
 
 min_rating = rating_df['rating_adjusted'].min()
-print(rating_df['rating_adjusted'].min())
-print(rating_df['rating_adjusted'].max())
 max_rating = rating_df['rating_adjusted'].max()
 
 
@@ -31,6 +29,6 @@ rating_df['scaled_rating'] = ((rating_df['rating_adjusted'] - min_rating) / (max
 
 filtered_df = rating_df[['userId', 'movieId', 'scaled_rating']]
 
-output_path = r"C:\Users\Joshua\Senior Thesis\Programs\Senior-Thesis-real\filtered_ratings.csv"
+output_path = r"C:\Users\Joshua\Senior Thesis\Programs\Senior-Thesis-real\filtered_ratings_small.csv"
 
 filtered_df.to_csv(output_path, index=False)
