@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 
 class CollaborativeFiltering:
     def __init__(self, ratings_df):
@@ -28,7 +27,7 @@ class CollaborativeFiltering:
         similarity_scores.sort(key=lambda x: x[1], reverse=True)
         return similarity_scores[:similar_users]
 
-    def recommend_movies(self, target_user, recommendations=5):
+    def recommend_movies(self, target_user, recommendations=10):
         similar_users = self.find_similar_users(target_user)
         recommended_movies = {}
 
@@ -47,35 +46,6 @@ class CollaborativeFiltering:
         final_recommendations = [(movie, np.mean(ratings)) for movie, ratings in recommended_movies.items()]
         final_recommendations.sort(key=lambda x: x[1], reverse=True)
 
-        return final_recommendations[:recommendations]
+        final_recommendations = final_recommendations[:recommendations]
 
-    def predict_rating(self, target_user, target_movie_id):
-        similar_users = self.find_similar_users(target_user)
-
-        weighted_sum = 0
-        similarity_sum = 0
-
-        for userId, similarity in similar_users:
-
-            user_ratings = self.ratings_df[(self.ratings_df['userId'] == userId) & (self.ratings_df['movieId'] == target_movie_id)]
-
-
-            if not user_ratings.empty:
-                user_rating = user_ratings.iloc[0]['scaled_rating']
-                weighted_sum += user_rating * similarity  
-                similarity_sum += abs(similarity)  
-
-        if similarity_sum == 0:
-            return None
-        else:
-            return weighted_sum / similarity_sum
-
-
-
-
-
-ratings_df = pd.read_csv(r"C:\Users\Joshua\Senior Thesis\Programs\Senior-Thesis-real\filtered_ratings_small.csv")
-cf = CollaborativeFiltering(ratings_df)
-user_id = 1
-recommendations = cf.predict_rating(user_id, 1263)
-print(recommendations)
+        return [int(movie[0]) for movie in final_recommendations]
