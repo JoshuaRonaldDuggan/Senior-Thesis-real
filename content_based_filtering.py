@@ -59,16 +59,7 @@ class ContentBasedFiltering:
         sorted_recommendations = sorted(all_recommendations.items(), key=lambda x: x[1], reverse=True)
         top_recommendations = sorted_recommendations[:k]
 
-        recommended_movies = self.movies_df[self.movies_df['id'].isin([rec[0] for rec in top_recommendations])]
-        recommended_movies['weighted_score'] = recommended_movies['id'].map(dict(top_recommendations))
+        recommended_movies = self.movies_df[self.movies_df['id'].isin([rec[0] for rec in top_recommendations])].copy()
+        recommended_movies.loc[:, 'weighted_score'] = recommended_movies['id'].map(dict(top_recommendations))
 
-        return recommended_movies[['id', 'weighted_score']].sort_values(by='weighted_score', ascending=False)
-
-movies_df = pd.read_csv(r"C:\Users\Joshua\Senior Thesis\Programs\Senior-Thesis-real\keywords.csv")
-ratings_df = pd.read_csv(r"C:\Users\Joshua\Senior Thesis\Programs\Senior-Thesis-real\filtered_ratings_small.csv")
-
-cb = ContentBasedFiltering(movies_df, ratings_df)
-
-user_id = 1
-recommendations = cb.recommend_movies(user_id)
-print(recommendations)
+        return recommended_movies['id'].unique()
